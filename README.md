@@ -1,8 +1,4 @@
-# SellerFlow_AI-BTK2026
-SellerFlow_AI-BTK2026
-
-
-# SellerFlow Studio 🚀
+# SellerFlow Studio-BTK2026 🚀
 
 ### AI Destekli Etsy Ürün Analizi, Tasarım ve SEO Otomasyon Platformu
 
