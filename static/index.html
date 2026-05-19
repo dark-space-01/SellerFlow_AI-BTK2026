@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SellerFlow Studio v3.0 🚀</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Vue 3 -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        glass: 'rgba(30, 41, 59, 0.6)',
+                        glassBorder: 'rgba(255, 255, 255, 0.1)',
+                    },
+                    animation: {
+                        'pulse-glow': 'pulse-glow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'bounce-slow': 'bounce 3s infinite',
+                    },
+                    keyframes: {
+                        'pulse-glow': {
+                            '0%, 100%': { opacity: '1', transform: 'scale(1)' },
+                            '50%': { opacity: '.8', transform: 'scale(1.02)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;700;900&display=swap');
+        * { box-sizing: border-box; }
+        body {
+            background: #070d1a;
+            background-image:
+                radial-gradient(ellipse 80% 60% at 50% -10%, rgba(99,51,200,0.35) 0%, transparent 60%),
+                radial-gradient(ellipse 50% 40% at 90% 80%, rgba(59,130,246,0.15) 0%, transparent 55%);
+            background-attachment: fixed;
+            color: #e2e8f0;
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+        }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            box-shadow: 0 30px 60px -15px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05);
+            border-radius: 1.5rem;
+        }
+        .glass-card:hover { border-color: rgba(168,85,247,0.15); }
+        .gradient-text {
+            background: linear-gradient(135deg, #c084fc 0%, #818cf8 50%, #38bdf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #9333ea, #4f46e5);
+            border: 1px solid rgba(168,85,247,0.4);
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.12), transparent);
+            opacity: 0;
+            transition: opacity 0.25s;
+        }
+        .btn-primary:hover:not(:disabled)::after { opacity: 1; }
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px -5px rgba(147,51,234,0.55);
+        }
+        .btn-primary:active:not(:disabled) { transform: translateY(0); }
+        .loader {
+            border: 3px solid rgba(255,255,255,0.08);
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            border-left-color: #a855f7;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .fade-enter-active, .fade-leave-active { transition: opacity 0.4s ease, transform 0.4s ease; }
+        .fade-enter-from, .fade-leave-to { opacity: 0; transform: translateY(16px); }
+        .grade-A { color: #4ade80; border-color: rgba(74,222,128,0.35); background: rgba(74,222,128,0.08); }
+        .grade-B { color: #60a5fa; border-color: rgba(96,165,250,0.35); background: rgba(96,165,250,0.08); }
+        .grade-C { color: #facc15; border-color: rgba(250,204,21,0.35); background: rgba(250,204,21,0.08); }
+        .grade-D { color: #f87171; border-color: rgba(248,113,113,0.35); background: rgba(248,113,113,0.08); }
+        .tag-badge { border-radius: .75rem; padding: .6rem .75rem; border-width: 1px; border-style: solid; transition: transform .2s; }
+        .tag-badge:hover { transform: translateY(-2px); }
+        /* Etsy verified star — orange = real Etsy autocomplete match */
+        .etsy-star { color: #f97316; font-size: .65rem; cursor: help; }
+        /* AI estimate badge */
+        .ai-badge {
+            display: inline-flex; align-items: center; gap: .25rem;
+            font-size: .6rem; font-weight: 700; letter-spacing: .04em;
+            background: rgba(251,191,36,.1); border: 1px solid rgba(251,191,36,.3);
+            color: #fbbf24; border-radius: 9999px; padding: .15rem .5rem;
+            cursor: help; vertical-align: middle; margin-left: .3rem;
+            transition: background .2s;
+        }
+        .ai-badge:hover { background: rgba(251,191,36,.2); }
+        /* Live data badge */
+        .live-badge {
+            display: inline-flex; align-items: center; gap: .25rem;
+            font-size: .6rem; font-weight: 700; letter-spacing: .04em;
+            background: rgba(74,222,128,.1); border: 1px solid rgba(74,222,128,.3);
+            color: #4ade80; border-radius: 9999px; padding: .15rem .5rem;
+            vertical-align: middle; margin-left: .3rem;
+        }
+        /* Data transparency panel */
+        .confidence-panel {
+            background: rgba(15,23,42,.7);
+            border: 1px solid rgba(255,255,255,.07);
+            border-radius: .875rem;
+            padding: .875rem 1rem;
+            margin-top: 1.25rem;
+        }
+        .confidence-row { display: flex; align-items: center; gap: .5rem; font-size: .72rem; padding: .25rem 0; }
+        .confidence-row .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+        .dot-live    { background: #4ade80; }
+        .dot-ai      { background: #fbbf24; }
+        .dot-none    { background: #64748b; }
+        .stat-box {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.07);
+            border-radius: 1rem;
+            padding: 1.2rem;
+            text-align: center;
+            transition: border-color .2s;
+        }
+        .stat-box:hover { border-color: rgba(168,85,247,0.3); }
+        input:focus { outline: none; }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: rgba(255,255,255,.03); }
+        ::-webkit-scrollbar-thumb { background: rgba(168,85,247,.4); border-radius: 10px; }
+        @keyframes pulse-glow {
+            0%,100% { text-shadow: 0 0 20px rgba(192,132,252,0); }
+            50% { text-shadow: 0 0 40px rgba(192,132,252,0.4); }
+        }
+        h1 { animation: pulse-glow 4s ease-in-out infinite; }
+    </style>
+</head>
+<body class="antialiased overflow-x-hidden">
+
+<div id="app" class="container mx-auto px-4 py-12 max-w-6xl">
+
+    <!-- Dismiss Suggestion Modal -->
+    <div v-if="showDismissModal" style="position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);z-index:999;display:flex;align-items:center;justify-content:center;" @click.self="closeDismissModal">
+        <div class="glass-card p-8 text-center" style="max-width:420px;width:90%;border:1px solid rgba(168,85,247,0.3);">
+            <div style="font-size:3rem;margin-bottom:1rem;">💭</div>
+            <h3 style="font-size:1.4rem;font-weight:700;margin-bottom:.75rem;">Başka bir öneri görmek ister misiniz?</h3>
+            <p style="color:#94a3b8;font-size:.875rem;margin-bottom:1.5rem;line-height:1.6;" v-if="nextEventPreview">Listede yaklaşan <strong style="color:#fff;">{{nextEventPreview.name}}</strong> var. Bu etkinlik için karlı niş önerileri sunabilirim.</p>
+            <p style="color:#94a3b8;font-size:.875rem;margin-bottom:1.5rem;" v-else>Listede başka yaklaşan etkinlik kalmadı.</p>
+            <div style="display:flex;gap:.75rem;">
+                <button v-if="nextEventPreview" @click="loadNextEvent" class="btn-primary" style="flex:1;padding:.75rem;border-radius:.75rem;font-weight:700;color:#fff;">✨ Evet, Göster</button>
+                <button @click="closeDismissModal" style="flex:1;padding:.75rem;border-radius:.75rem;background:rgba(71,85,105,0.5);font-weight:600;transition:background .2s;" onmouseover="this.style.background='rgba(71,85,105,0.8)'" onmouseout="this.style.background='rgba(71,85,105,0.5)'">Hayır, Kapat</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Header -->
+    <header class="text-center mb-12">
+        <div style="display:inline-block;background:rgba(147,51,234,0.12);border:1px solid rgba(147,51,234,0.3);border-radius:9999px;padding:.35rem 1.2rem;font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#c084fc;margin-bottom:1.25rem;">&#x1F680; v3.0 &mdash; AI Etsy Asistan&#x131;</div>
+        <h1 class="text-6xl md:text-7xl font-heading font-black tracking-tight mb-4 animate-pulse-glow">
+            <span class="gradient-text">SellerFlow</span> Studio
+        </h1>
+        <p class="text-slate-400 text-lg md:text-xl font-light max-w-2xl mx-auto">
+            Canlı Etsy verisi &middot; AI Tasarım &middot; eRank SEO &middot; Tek tıkla ZIP
+        </p>
+    </header>
+
+    <!-- Event Banner -->
+    <div v-if="upcomingEvent && page === 'input'" class="max-w-3xl mx-auto mb-8">
+        <div style="background:linear-gradient(135deg,rgba(249,115,22,.15),rgba(239,68,68,.15));border:1px solid rgba(249,115,22,.3);border-radius:1.25rem;padding:1.5rem;text-align:center;position:relative;overflow:hidden;backdrop-filter:blur(12px);">
+            <button @click="dismissEvent" title="Beğenmedim" style="position:absolute;top:.75rem;right:.75rem;width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.1);border:none;color:#94a3b8;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .2s;" onmouseover="this.style.background='rgba(255,255,255,.2)';this.style.color='#fff'" onmouseout="this.style.background='rgba(255,255,255,.1)';this.style.color='#94a3b8'">✕</button>
+            <span style="position:absolute;top:.75rem;left:.75rem;background:#ef4444;color:#fff;font-size:.6rem;font-weight:800;padding:.2rem .6rem;border-radius:9999px;letter-spacing:.05em;text-transform:uppercase;">🔥 Fırsat</span>
+            <h3 style="font-size:1.25rem;font-weight:700;color:#fb923c;margin:.5rem 0 .25rem;">{{upcomingEvent.name}}</h3>
+            <p style="color:#cbd5e1;font-size:.875rem;margin-bottom:.25rem;"><strong style="color:#fff;">{{upcomingEvent.days_left}}</strong> gün kaldı · {{upcomingEvent.date}}</p>
+            <p style="color:#64748b;font-size:.75rem;margin-bottom:1rem;">Bu alanda rekabet düşük, talep yüksek!</p>
+            <button @click="autoFillEvent" style="background:#f97316;color:#fff;font-weight:700;padding:.6rem 2rem;border-radius:.75rem;border:none;cursor:pointer;font-size:.875rem;transition:all .2s;" onmouseover="this.style.background='#fb923c'" onmouseout="this.style.background='#f97316'">
+                ⚡ {{upcomingEvent.name}} İçin Tasarım Üret
+            </button>
+        </div>
+    </div>
+
+    <transition name="fade" mode="out-in">
+        
+        <!-- PAGE: INPUT -->
+        <div v-if="page === 'input'" key="input" class="max-w-3xl mx-auto">
+            <!-- Onboarding Category Selector -->
+            <div class="grid md:grid-cols-2 gap-6 mb-8">
+                <!-- Card 1: Print on Demand -->
+                <div @click="businessModel = 'pod'" 
+                     class="glass-card p-6 cursor-pointer transition-all duration-300 text-left border flex items-start gap-4 relative overflow-hidden group"
+                     :class="businessModel === 'pod' ? 'border-purple-500 bg-purple-500/10 shadow-[0_0_20px_rgba(168,85,247,0.25)] scale-[1.02]' : 'border-slate-800 hover:border-slate-700'">
+                    <!-- Glowing Background Effect -->
+                    <div class="absolute -right-8 -bottom-8 w-24 h-24 rounded-full bg-purple-500/10 blur-xl group-hover:scale-125 transition duration-300"></div>
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center bg-purple-500/10 border border-purple-500/30 text-purple-400 font-heading text-2xl font-bold shrink-0">
+                        👕
+                    </div>
+                    <div>
+                        <h3 class="font-heading font-bold text-lg text-white group-hover:text-purple-300 transition duration-200">Tişört & Sweatshirt (POD)</h3>
+                        <p class="text-xs text-slate-400 mt-1 leading-relaxed">AI ile özgün grafik tasarımlar üretin, şık mockup şablonlarına giydirin ve hazır SEO listelemelerini alın.</p>
+                    </div>
+                </div>
+
+                <!-- Card 2: Physical & Handmade Products -->
+                <div @click="businessModel = 'physical'" 
+                     class="glass-card p-6 cursor-pointer transition-all duration-300 text-left border flex items-start gap-4 relative overflow-hidden group"
+                     :class="businessModel === 'physical' ? 'border-blue-500 bg-blue-500/10 shadow-[0_0_20px_rgba(59,130,246,0.25)] scale-[1.02]' : 'border-slate-800 hover:border-slate-700'">
+                    <!-- Glowing Background Effect -->
+                    <div class="absolute -right-8 -bottom-8 w-24 h-24 rounded-full bg-blue-500/10 blur-xl group-hover:scale-125 transition duration-300"></div>
+                    <div class="w-12 h-12 rounded-xl flex items-center justify-center bg-blue-500/10 border border-blue-500/30 text-blue-400 font-heading text-2xl font-bold shrink-0">
+                        🛋️
+                    </div>
+                    <div>
+                        <h3 class="font-heading font-bold text-lg text-white group-hover:text-blue-300 transition duration-200">Fiziksel & El Yapımı Ürünler</h3>
+                        <p class="text-xs text-slate-400 mt-1 leading-relaxed">Masa, ayakkabı, bot, tablo, kolye vb. için ABD pazar analizleri, 12 aylık satış trendleri ve karlı SEO tag'leri alın.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card p-8 md:p-12 text-center">
+                <h2 class="text-2xl font-semibold mb-6 flex items-center justify-center gap-2">
+                    <span v-if="businessModel === 'pod'">💡 Ne tasarımı üretmek istiyorsun?</span>
+                    <span v-else>📦 Ne fiziksel ürünü satmak istiyorsun?</span>
+                </h2>
+                <div class="relative max-w-xl mx-auto">
+                    <input v-model="userIdea" @keyup.enter="startAnalysis" type="text" 
+                        :placeholder="businessModel === 'pod' ? 'Örn: Cyberpunk kedi tişörtü, vintage çiçek deseni...' : 'Örn: Deri bot, ahşap yemek masası, gümüş kolye, minimalist tablo...'" 
+                        class="w-full bg-slate-800/50 border border-slate-700 text-white rounded-2xl px-6 py-4 text-lg focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all">
+                </div>
+                <button @click="startAnalysis" :disabled="!userIdea.trim() || isLoading" 
+                    class="btn-primary mt-8 px-10 py-4 rounded-xl font-bold text-lg text-white shadow-lg disabled:opacity-50 inline-flex items-center gap-3">
+                    <div v-if="isLoading" class="loader !w-5 !h-5 !border-2"></div>
+                    <span v-else>🔍 Rakipleri ve Pazarı Analiz Et</span>
+                </button>
+            </div>
+            
+            <div class="mt-12 text-center text-sm text-slate-500">
+                <p>Not: Aramayı başlattığında yapay zeka <strong>Etsy'ye bağlanıp canlı veri çeker</strong>.</p>
+            </div>
+        </div>
+
+        <!-- PAGE: ANALYSIS -->
+        <div v-else-if="page === 'analysis'" key="analysis">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-heading font-bold">📊 Pazar ve Rakip Analizi</h2>
+                <p class="text-slate-400 mt-2">İnternetten canlı veriler çekildi ve trend analizleri tamamlandı.</p>
+            </div>
+
+            <div v-if="isLoading" class="flex flex-col items-center justify-center py-20">
+                <div class="loader mb-6"></div>
+                <p class="text-xl text-slate-300 animate-pulse">{{loadingText}}</p>
+            </div>
+
+            <div v-else class="grid lg:grid-cols-2 gap-8">
+                <!-- AI Suggestion & Graphs -->
+                <div class="glass-card p-8 border-l-4 border-l-purple-500 flex flex-col h-full">
+                    <div class="uppercase text-xs font-bold tracking-wider text-purple-400 mb-2">Yapay Zeka Niş Önerisi</div>
+                    <h3 class="text-3xl font-bold mb-4 text-purple-300">{{analysisData.suggested_niche}}</h3>
+                    <p class="text-slate-300 text-sm mb-6 italic border-l-2 border-slate-600 pl-3">"{{analysisData.why_better}}"</p>
+                    
+                    <!-- ABD (US) Pazar Trend Raporu -->
+                    <div v-if="analysisData.design_applicable === false" class="mb-6 p-4 rounded-xl border border-orange-500/30 bg-orange-500/10 shadow-[0_0_15px_rgba(249,115,22,0.1)]">
+                        <div class="flex items-center gap-2 mb-2">
+                            <span class="text-lg">🇺🇸</span>
+                            <h4 class="text-sm font-bold text-orange-400 uppercase tracking-wider">ABD (US) Pazar Trend Raporu</h4>
+                        </div>
+                        <p class="text-xs text-slate-200 leading-relaxed font-semibold">{{analysisData.us_market_sales_insight}}</p>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4 mb-4">
+                        <div class="stat-box">
+                            <div class="text-xs text-slate-400 uppercase tracking-wide mb-1">
+                                Aylık Tahmini Satış
+                                <span v-if="!analysisData.ehunt_active" class="ai-badge" title="Bu değer gerçek Etsy verisi değil — AI tarafından niche analizi sonucu üretilmiş tahmindir.">🤖 AI Tahmini</span>
+                                <span v-else class="live-badge" title="EtsyHunt VIP API'den çekilen canlı veri.">🟢 EtsyHunt VIP</span>
+                            </div>
+                            <div class="text-2xl font-black text-green-400">{{analysisData.estimated_monthly_sales}}</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="text-xs text-slate-400 uppercase tracking-wide mb-1">
+                                En İyi Listeleme Ayı
+                                <span v-if="!analysisData.ehunt_active" class="ai-badge" title="Mevsimsel trend tahminidir; gerçek Etsy satış takvimine değil AI analizine dayanır.">🤖 AI Tahmini</span>
+                                <span v-else class="live-badge" title="EtsyHunt VIP API 12 aylık trend analizi.">🟢 EtsyHunt VIP</span>
+                            </div>
+                            <div class="text-2xl font-black text-blue-400">{{analysisData.best_month_to_list}}</div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-2 text-xs text-slate-300 mb-6 bg-slate-800/50 p-3 rounded-xl border border-white/5">
+                        <div class="flex items-center gap-2"><span class="text-green-400 font-bold text-sm">📈 Çok Satış Alan Aylar:</span> <span>{{analysisData.high_sales_months}}</span></div>
+                        <div class="flex items-center gap-2"><span class="text-red-400 font-bold text-sm">📉 Düşük Kalan Aylar:</span> <span>{{analysisData.low_sales_months}}</span></div>
+                    </div>
+
+                    <!-- Trend Chart -->
+                    <div class="mt-auto p-4 rounded-xl border border-white/5" style="background:rgba(255,255,255,0.03)">
+                        <div class="flex items-center justify-between mb-2">
+                            <h4 class="text-sm font-bold text-slate-400">📈 12 Aylık Satış Tahmini</h4>
+                            <span v-if="!analysisData.ehunt_active" class="ai-badge" title="Bu grafik gerçek Etsy arama hacmi verisi değil — AI'ın mevsimsel örüntülerden ürettiği tahmindir. Gerçek trendler için eRank veya Marmalead kullanın.">🤖 Tahmini Trend</span>
+                            <span v-else class="live-badge" title="EtsyHunt VIP API'den çekilen gerçek arama trend grafiği.">🟢 EtsyHunt VIP</span>
+                        </div>
+                        <div style="position:relative; height:150px; width:100%">
+                            <canvas id="trendChart"></canvas>
+                        </div>
+                    </div>
+                    <!-- Peak Sales Chart -->
+                    <div class="mt-4 p-4 rounded-xl border border-white/5" style="background:rgba(255,255,255,0.03)">
+                        <h4 class="text-sm font-bold text-slate-400 mb-1">&#x1F525; En Çok Satış Dönemi</h4>
+                        <p class="text-xs text-orange-400 mb-3" v-if="analysisData.peak_months?.length">
+                            Turuncu barlar = Pik satış ayları — Bu aylarda önce listele!
+                        </p>
+                        <div style="position:relative;height:120px;width:100%">
+                            <canvas id="peakChart"></canvas>
+                        </div>
+                    </div>
+
+                    <button @click="goToDesignStyle(analysisData.suggested_niche)" class="w-full mt-6 py-4 rounded-xl btn-primary font-bold shadow-[0_0_15px_rgba(168,85,247,0.4)] text-lg">
+                        <span v-if="analysisData.design_applicable">🏷️ Tag Stratejisi Seç & Üret</span>
+                        <span v-else>🏷️ Ürün SEO Stratejisi Seç & Raporu Al</span>
+                    </button>
+                </div>
+
+                <!-- Original Idea Comparison -->
+                <div class="glass-card p-8 border-l-4 border-l-slate-600 flex flex-col h-full opacity-80">
+                    <div class="uppercase text-xs font-bold tracking-wider text-slate-400 mb-2">Senin Orijinal Fikrin</div>
+                    <h3 class="text-2xl font-bold mb-4">{{analysisData.original_idea}}</h3>
+                    
+                    <div class="space-y-6">
+                        <div>
+                            <div class="flex justify-between text-sm mb-2 text-slate-400">
+                                <span>Rekabet Skoru (Düşük Daha İyi)</span>
+                                <span class="font-bold">{{analysisData.competition_score}}/100 ({{analysisData.competition_level}})</span>
+                            </div>
+                            <div class="h-3 bg-slate-700 rounded-full overflow-hidden">
+                                <div class="h-full bg-slate-500" :style="{width: analysisData.competition_score + '%'}"></div>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-800/50 p-4 rounded-xl border border-white/5">
+                            <h4 class="text-sm font-bold text-slate-400 mb-2">Pazar Doygunluk Raporu (Canlı Veriyle)</h4>
+                            <p class="text-sm text-slate-300 leading-relaxed">{{analysisData.saturation_analysis}}</p>
+                        </div>
+                    </div>
+                    
+                    <button @click="goToDesignStyle(analysisData.original_idea)" class="w-full mt-auto py-3 rounded-xl bg-slate-700 hover:bg-slate-600 transition font-semibold">
+                        Orijinal Fikrimle Devam Et
+                    </button>
+                </div>
+            </div>
+            
+        </div>
+
+        <!-- PAGE: DESIGN-STYLE & TAG-STRATEGY -->
+        <div v-else-if="page === 'design-style'" key="design-style">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-heading font-bold" v-if="isDesignProduct">🎨 Üretim Tercihleri</h2>
+                <h2 class="text-3xl font-heading font-bold" v-else>🏷️ Etsy SEO ve Tag Stratejisi</h2>
+                <p class="text-slate-400 mt-2 text-sm" v-if="isDesignProduct">Tasarım stilini, mockup ürününü ve SEO stratejisini belirleyin</p>
+                <p class="text-slate-400 mt-2 text-sm" v-else>Bu fiziksel ürün için tasarım üretilmez — sadece SEO tag stratejini seçin</p>
+            </div>
+            <div class="glass-card p-8 mb-8">
+                
+                <div v-if="isDesignProduct">
+                    <h3 class="text-xl font-bold mb-4 border-b border-slate-700 pb-2">1. Tasarım Stili (AI Generative)</h3>
+                    <div class="grid md:grid-cols-3 gap-4 mb-8">
+                        <div v-for="s in designStyles" :key="s.id" @click="selectedDesignStyle = s.id"
+                            class="p-4 rounded-xl cursor-pointer transition-all duration-200 text-center"
+                            :style="selectedDesignStyle === s.id ? 'border:2px solid #3b82f6;background:rgba(59,130,246,.15);' : 'border:2px solid rgba(255,255,255,.07);background:rgba(30,41,59,.5);'">
+                            <div style="font-size:2rem;margin-bottom:.25rem;">{{s.icon}}</div>
+                            <div style="font-weight:800;font-size:.9rem;">{{s.name}}</div>
+                            <div style="font-size:.7rem;color:#94a3b8;">{{s.desc}}</div>
+                        </div>
+                    </div>
+
+                    <h3 class="text-xl font-bold mb-4 border-b border-slate-700 pb-2">2. Mockup Seçimi</h3>
+                    <div class="grid md:grid-cols-3 gap-4 mb-8">
+                        <div v-for="m in mockupTypes" :key="m.id" @click="selectedMockupType = m.id"
+                            class="p-4 rounded-xl cursor-pointer transition-all duration-200 text-center flex flex-col items-center justify-center"
+                            :style="selectedMockupType === m.id ? 'border:2px solid #10b981;background:rgba(16,185,129,.15);' : 'border:2px solid rgba(255,255,255,.07);background:rgba(30,41,59,.5);'">
+                            <div style="font-size:2rem;margin-bottom:.25rem;">{{m.icon}}</div>
+                            <div style="font-weight:800;font-size:.9rem;">{{m.name}}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 class="text-xl font-bold mb-4 border-b border-slate-700 pb-2"><span v-if="isDesignProduct">3. </span>Etsy Tag Stratejisi</h3>
+                <div class="grid md:grid-cols-3 gap-4">
+                    <div v-for="t in tagStrategies" :key="t.id" @click="selectedTagStrategy = t.id"
+                        class="p-4 rounded-xl cursor-pointer transition-all duration-200 text-center"
+                        :style="selectedTagStrategy === t.id ? 'border:2px solid #a855f7;background:rgba(168,85,247,.15);' : 'border:2px solid rgba(255,255,255,.07);background:rgba(30,41,59,.5);'">
+                        <div style="font-size:2rem;margin-bottom:.25rem;">{{t.icon}}</div>
+                        <div style="font-weight:800;font-size:.9rem;">{{t.name}}</div>
+                        <div style="font-size:.7rem;color:#94a3b8;line-height:1.4;">{{t.desc}}</div>
+                    </div>
+                </div>
+
+            </div>
+            <button @click="startProduction(selectedNiche)" class="w-full btn-primary py-4 rounded-xl font-bold text-lg text-white shadow-lg">
+                🚀 Üretimi Başlat
+            </button>
+        </div>
+
+        <!-- PAGE: PRODUCTION -->
+        <div v-else-if="page === 'production'" key="production" class="max-w-2xl mx-auto">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-heading font-bold">⚡ Otonom Üretim Hattı</h2>
+                <p class="text-slate-400 mt-2">Niş: <span class="text-purple-400 font-semibold">{{selectedNiche}}</span></p>
+            </div>
+
+            <div class="glass-card p-8">
+                <div class="space-y-6">
+                    <div v-for="(task, idx) in productionTasks" :key="idx" class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-full flex items-center justify-center shrink-0 border-2" 
+                            :class="[task.status === 'done' ? 'bg-green-500/20 text-green-400 border-green-500/50' : 
+                                    task.status === 'running' ? 'bg-purple-500/20 text-purple-400 border-purple-500/50 shadow-[0_0_15px_rgba(168,85,247,0.4)]' : 'bg-slate-800 text-slate-600 border-slate-700']">
+                            <svg v-if="task.status === 'done'" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            <div v-else-if="task.status === 'running'" class="loader !w-6 !h-6 !border-2 !border-purple-400 border-l-transparent"></div>
+                            <span v-else class="font-bold">{{idx+2}}</span>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-lg" :class="task.status === 'pending' ? 'text-slate-500' : 'text-white'">{{task.name}}</h4>
+                            <p class="text-sm" :class="task.status === 'pending' ? 'text-slate-600' : 'text-slate-400'">{{task.desc}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE: RESULT -->
+        <div v-else-if="page === 'result'" key="result">
+            <div class="text-center mb-8 flex flex-col items-center">
+                <div class="bg-green-500/20 text-green-400 w-16 h-16 rounded-full flex items-center justify-center mb-4 shadow-[0_0_20px_rgba(74,222,128,0.3)]">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                </div>
+                <h2 class="text-4xl font-heading font-black">Etsy Paketiniz Hazır! 🎉</h2>
+            </div>
+
+            <div class="grid lg:grid-cols-12 gap-8">
+                <!-- Visuals & CTR -->
+                <div class="lg:col-span-5 space-y-6">
+                    <div class="glass-card p-6">
+                        <!-- Main Active Mockup Display -->
+                        <div v-if="activeMockupUrl" class="aspect-square bg-slate-800 rounded-xl overflow-hidden mb-4 border border-white/5 relative group shadow-[0_10px_35px_rgba(0,0,0,0.5)]">
+                            <img :src="activeMockupUrl" class="w-full h-full object-cover transition duration-300" alt="Mockup">
+                        </div>
+                        <div v-else class="aspect-square rounded-xl mb-4 border border-dashed border-purple-500/30 flex flex-col items-center justify-center" style="background:rgba(168,85,247,0.05);">
+                            <div style="font-size:4rem;">&#x1F4C4;</div>
+                            <div class="text-purple-400 font-bold mt-3">Dijital Ürün</div>
+                            <div class="text-slate-500 text-sm mt-1">Tasarım uygulanmıyor</div>
+                        </div>
+
+                        <!-- Mockup Thumbnails Switcher -->
+                        <div v-if="resultData && resultData.mockup_urls && resultData.mockup_urls.length > 1" class="mb-4">
+                            <div class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                                🎨 Diğer Alternatif Şablonlar (Değiştirmek İçin Tıkla)
+                            </div>
+                            <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-purple-500 scrollbar-track-slate-800">
+                                <div v-for="(url, idx) in resultData.mockup_urls" :key="idx" 
+                                     @click="activeMockupUrl = url"
+                                     class="w-16 h-16 rounded-lg overflow-hidden cursor-pointer border-2 transition duration-200 shrink-0 hover:scale-105"
+                                     :class="activeMockupUrl === url ? 'border-purple-500 shadow-[0_0_12px_rgba(168,85,247,0.5)] scale-102' : 'border-white/10 hover:border-white/30'">
+                                    <img :src="url" class="w-full h-full object-cover" :alt="'Mockup ' + (idx + 1)">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Regenerate Design Button -->
+                        <div v-if="resultData && resultData.design_url" class="mb-4">
+                            <button @click="regenerateDesignOnly" 
+                                    :disabled="isRegenerating"
+                                    class="w-full py-3 px-4 rounded-xl font-bold transition duration-300 flex items-center justify-center gap-2 border shadow-lg"
+                                    :class="isRegenerating 
+                                        ? 'bg-purple-900/40 text-purple-300 border-purple-500/30 cursor-not-allowed' 
+                                        : 'bg-gradient-to-r from-indigo-500/20 to-purple-500/20 hover:from-indigo-500/30 hover:to-purple-500/30 text-white border-purple-500/40 hover:border-purple-500 hover:shadow-[0_0_15px_rgba(168,85,247,0.3)] hover:scale-[1.01] active:scale-[0.99]'">
+                                <span v-if="isRegenerating" class="flex items-center gap-2">
+                                    <svg class="animate-spin h-5 w-5 text-purple-400" viewBox="0 0 24 24" fill="none">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    Yeni Tasarım Üretiliyor...
+                                </span>
+                                <span v-else class="flex items-center gap-2">
+                                    🎨 Tasarımı Beğenmedim, Yeni Üret
+                                </span>
+                            </button>
+                        </div>
+                        <div class="flex justify-between items-center bg-slate-800/80 p-4 rounded-xl border border-white/5">
+                            <div>
+                                <div class="text-xs text-slate-400 uppercase tracking-wider">
+                                    Tahmini CTR
+                                    <span class="ai-badge" title="Gerçek tıklanma verisi değil — AI tarafından tahmin edilmiştir.">🤖 AI</span>
+                                </div>
+                                <div class="text-2xl font-bold text-blue-400">{{resultData.seo_data?.ctr_estimate}}</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-xs text-slate-400 uppercase tracking-wider">
+                                    SEO Skoru
+                                    <span class="ai-badge" title="eRank/Marmalead gibi araçların skoru değil — AI tabanlı bir optimizasyon puanıdır.">🤖 AI</span>
+                                </div>
+                                <div class="text-2xl font-bold text-green-400">{{resultData.seo_data?.overall_seo_score}}/100</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-6">
+                        <h4 class="text-sm font-bold text-slate-300 mb-2">Prompt ve Orijinal Çizim</h4>
+                        <div class="flex gap-4">
+                            <img :src="resultData.design_url" class="w-24 h-24 rounded-lg object-cover border border-slate-700">
+                            <div class="text-xs font-mono text-slate-500 overflow-y-auto max-h-24">{{resultData.prompt}}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Advanced SEO Data -->
+                <div class="lg:col-span-7">
+                    <div class="glass-card p-6 flex flex-col h-full">
+                        <h3 class="text-xl font-bold mb-6 border-b border-white/10 pb-4 flex items-center gap-2">
+                            <span>🏷️ eRank Seviyesi SEO Optimizasyonu</span>
+                        </h3>
+                        
+                        <div class="space-y-8 flex-1">
+                            <div>
+                                <div class="flex justify-between items-end mb-2">
+                                    <h4 class="text-sm font-bold uppercase tracking-wider text-purple-400">Ürün Başlığı (Etsy Algoritmasına Uygun)</h4>
+                                    <span class="text-xs text-slate-500">{{resultData.seo_data?.title?.length}}/140 Char</span>
+                                </div>
+                                <div class="bg-slate-800 p-4 rounded-xl font-medium border border-slate-700 text-lg shadow-inner">{{resultData.seo_data?.title}}</div>
+                            </div>
+
+                            <div>
+                                <div class="flex items-center justify-between mb-3">
+                                    <h4 class="text-sm font-bold uppercase tracking-wider text-blue-400">13 Etiket (Tags)</h4>
+                                    <div class="flex items-center gap-3 text-[10px] text-slate-500">
+                                        <span><span class="etsy-star">★</span> Etsy Autocomplete'de doğrulandı</span>
+                                        <span class="ai-badge" style="cursor:default" title="Arama hacimleri gerçek Etsy verisi değil — AI tarafından üretilmiş tahmindir. Doğru veri için eRank kullanın.">🤖 Hacimler Tahmini</span>
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                    <div v-for="tag in resultData.seo_data?.tags" class="tag-badge border flex flex-col justify-center text-center shadow-sm" :class="`grade-${tag.grade}`">
+                                        <div class="font-bold text-sm truncate" :title="tag.word">
+                                            {{tag.word}}
+                                            <!-- ★ SADECE gerçekten Etsy Autocomplete'de eşleşenlerde göster -->
+                                            <span v-if="tag.etsy_verified === true" class="etsy-star" title="✅ Bu tag Etsy Autocomplete verisiyle doğrulandı — gerçek aramalardan gelmektedir."> ★</span>
+                                        </div>
+                                        <div class="flex justify-between px-1 mt-1 opacity-75 text-[10px] uppercase">
+                                            <span :title="'🤖 AI Tahmini — gerçek Etsy arama verisi değil'">~{{tag.search_volume?.toLocaleString()}}</span>
+                                            <span class="font-bold">{{tag.grade}}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h4 class="text-sm font-bold uppercase tracking-wider text-green-400 mb-2">Hikayesel Ürün Açıklaması</h4>
+                                <div class="bg-slate-800 p-4 rounded-xl text-sm leading-relaxed border border-slate-700 h-32 overflow-y-auto whitespace-pre-wrap shadow-inner">{{resultData.seo_data?.description}}</div>
+                            </div>
+                        </div>
+
+                        <!-- Data Confidence Panel -->
+                        <div class="confidence-panel">
+                            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">📊 Veri Güvenilirlik Raporu</div>
+                            <div class="confidence-row">
+                                <div class="dot" :class="resultData.seo_data?.data_confidence?.competitor_titles === 'ehunt_api' ? 'dot-live' : 'dot-none'"></div>
+                                <span class="text-slate-300">Pazar Verisi Kaynağı</span>
+                                <span v-if="resultData.seo_data?.data_confidence?.competitor_titles === 'ehunt_api'" class="live-badge">🟢 EtsyHunt API</span>
+                                <span v-else style="font-size:.6rem;background:rgba(100,116,139,.15);border:1px solid rgba(100,116,139,.3);color:#64748b;border-radius:9999px;padding:.15rem .5rem;margin-left:.3rem;">⚫ Erişilemedi</span>
+                                <span class="text-slate-500 ml-1">— {{resultData.seo_data?.data_confidence?.competitor_titles === 'ehunt_api' ? 'VIP plan aktif, veriler doğrudan API üzerinden çekiliyor.' : 'EtsyHunt verisi çekilemedi.'}}</span>
+                            </div>
+                            <div class="confidence-row">
+                                <div class="dot" :class="resultData.seo_data?.data_confidence?.etsy_autocomplete === 'live' ? 'dot-live' : 'dot-none'"></div>
+                                <span class="text-slate-300">Etsy Autocomplete</span>
+                                <span v-if="resultData.seo_data?.data_confidence?.etsy_autocomplete === 'live'" class="live-badge">🟢 Canlı</span>
+                                <span v-else style="font-size:.6rem;background:rgba(100,116,139,.15);border:1px solid rgba(100,116,139,.3);color:#64748b;border-radius:9999px;padding:.15rem .5rem;margin-left:.3rem;">⚫ Erişilemedi</span>
+                                <span class="text-slate-500 ml-1">— ★ yıldızlı etiketler doğrulandı</span>
+                            </div>
+                            <div class="confidence-row">
+                                <div class="dot dot-ai"></div>
+                                <span class="text-slate-300">Arama Hacimleri</span>
+                                <span class="ai-badge" style="cursor:default">🤖 AI Tahmini</span>
+                                <span class="text-slate-500 ml-1">— Gerçek veri için eRank / Marmalead kullanın</span>
+                            </div>
+                            <div class="confidence-row">
+                                <div class="dot dot-ai"></div>
+                                <span class="text-slate-300">CTR · SEO Skoru · Aylık Satış</span>
+                                <span class="ai-badge" style="cursor:default">🤖 AI Tahmini</span>
+                                <span class="text-slate-500 ml-1">— Yönlendirici; kesin değil</span>
+                            </div>
+                        </div>
+
+                        <!-- Export Button -->
+                        <div class="mt-4 pt-4 border-t border-white/10">
+                            <button @click="downloadZip" class="w-full btn-primary py-4 rounded-xl font-bold text-lg flex items-center justify-center gap-3">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                                Tüm Paketi .ZIP Olarak İndir
+                            </button>
+                            <button @click="reset" class="w-full mt-4 py-2 text-slate-400 hover:text-white transition font-medium">
+                                Ana Sayfaya Dön
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </transition>
+</div>
+
+<script>
+    const { createApp, ref, reactive, onMounted, nextTick } = Vue;
+
+    createApp({
+        setup() {
+            const page = ref('input');
+            const userIdea = ref('');
+            const businessModel = ref('pod');
+            const isLoading = ref(false);
+            const loadingText = ref('Veriler taranıyor...');
+            
+            const upcomingEvent = ref(null);
+            const allEvents = ref([]);
+            const dismissedIndex = ref(0);
+            const showDismissModal = ref(false);
+            const nextEventPreview = ref(null);
+            const analysisData = ref(null);
+            const selectedNiche = ref('');
+            const resultData = ref(null);
+            const activeMockupUrl = ref('');
+            const selectedDesignStyle = ref('minimalist');
+            const selectedTagStrategy = ref('balanced');
+            const selectedMockupType = ref('auto');
+            const isDesignProduct = ref(true);
+            const isRegenerating = ref(false);
+            let chartInstance = null;
+            let peakChartInstance = null;
+
+            const designStyles = [
+                { id: 'auto',       name: 'Otomatik (AI Kararı)', icon: '🤖', desc: 'AI anahtar kelimene göre en uygun stili seçer' },
+                { id: 'minimalist', name: 'Minimalist', icon: '⬜', desc: 'Temiz, sade, modern' },
+                { id: 'vintage',    name: 'Retro Vintage', icon: '🏅', desc: 'Nostaljik, yıpranmış doku' },
+                { id: 'cyber',      name: 'Cyberpunk',  icon: '⚡', desc: 'Neon, fütüristik, glitch' },
+                { id: 'nature',     name: 'Botanik',    icon: '🌿', desc: 'Doğal, organik, suluboya' },
+                { id: 'gothic',     name: 'Gotik',      icon: '💀', desc: 'Karanlık, dramatik, güçlü' },
+                { id: 'kawaii',     name: 'Kawaii',     icon: '🌸', desc: 'Sevimli, pastel, chibi' },
+            ];
+            
+            const mockupTypes = [
+                { id: 'auto',       name: 'Otomatik (Kelimeye Göre)', icon: '🧠' },
+                { id: 'tshirt',     name: 'Sadece Tişört Kullan',     icon: '👕' },
+                { id: 'sweatshirt', name: 'Sadece Sweatshirt Kullan', icon: '🧥' },
+            ];
+
+            const tagStrategies = [
+                { id: 'high_traffic',    icon: '🚀', name: 'Yüksek Trafik',    desc: 'Milyonlarca arama — yüksek rekabet ama büyük erişim' },
+                { id: 'low_competition', icon: '🎯', name: 'Düşük Rekabet',    desc: 'Niche, az rakip — ilk sayfada çıkma şansı yüksek' },
+                { id: 'balanced',        icon: '⚖️', name: 'Dengeli Strateji', desc: 'Orta hacim & orta rekabet — en güvenli seçim' },
+            ];
+
+            const productionTasks = reactive([
+                { name: 'Ajan 2: Prompt Engineer', desc: 'Sıfırdan mükemmel tasarım çizim komutu yazılıyor...', status: 'pending' },
+                { name: 'Ajan 3: Design Generator', desc: 'AI Görsel Motoru devrede. Baskıya hazır tasarım üretiliyor...', status: 'pending' },
+                { name: 'Ajan 4: Mockup Compositor', desc: 'Vektörler tişört şablonuna 3D olarak giydiriliyor...', status: 'pending' },
+                { name: 'Ajan 5: SEO Optimizer', desc: 'Dev SEO analizi yapılıyor, rakipler taranıyor...', status: 'pending' }
+            ]);
+
+            onMounted(async () => {
+                try {
+                    const res = await axios.get('/api/events');
+                    allEvents.value = res.data.all_events || [];
+                    if(res.data.upcoming_event) {
+                        upcomingEvent.value = res.data.upcoming_event;
+                    }
+                } catch(e) {}
+            });
+
+            const autoFillEvent = () => {
+                userIdea.value = upcomingEvent.value.niche_hint;
+                startAnalysis();
+            };
+
+            const dismissEvent = () => {
+                const nextIdx = dismissedIndex.value + 1;
+                nextEventPreview.value = allEvents.value[nextIdx] || null;
+                showDismissModal.value = true;
+            };
+
+            const closeDismissModal = () => {
+                showDismissModal.value = false;
+                upcomingEvent.value = null;
+            };
+
+            const loadNextEvent = () => {
+                dismissedIndex.value++;
+                upcomingEvent.value = allEvents.value[dismissedIndex.value] || null;
+                showDismissModal.value = false;
+            };
+
+            const initChart = (retries = 0) => {
+                if(chartInstance) { chartInstance.destroy(); chartInstance = null; }
+                const canvas = document.getElementById('trendChart');
+                if(!canvas) {
+                    if(retries < 10) setTimeout(() => initChart(retries + 1), 150);
+                    return;
+                }
+                const tData = analysisData.value.sales_data || analysisData.value.trend_data || Array(12).fill(50);
+                const minVal = Math.max(0, Math.min(...tData) - 5);
+                const maxVal = Math.max(...tData) + 10;
+                chartInstance = new Chart(canvas.getContext('2d'), {
+                    type: 'line',
+                    data: {
+                        labels: analysisData.value.trend_months,
+                        datasets: [{
+                            label: 'Tahmini Satış (Adet)',
+                            data: tData,
+                            borderColor: '#a855f7',
+                            backgroundColor: (ctx) => {
+                                const g = ctx.chart.ctx.createLinearGradient(0,0,0,160);
+                                g.addColorStop(0,'rgba(168,85,247,0.35)');
+                                g.addColorStop(1,'rgba(168,85,247,0)');
+                                return g;
+                            },
+                            borderWidth: 2.5,
+                            tension: 0.45,
+                            fill: true,
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
+                            pointBackgroundColor: '#3b82f6',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 1.5
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        animation: { duration: 1000, easing: 'easeInOutQuart' },
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                enabled: true,
+                                backgroundColor: 'rgba(15,23,42,.95)',
+                                titleColor: '#e2e8f0',
+                                bodyColor: '#94a3b8',
+                                borderColor: 'rgba(168,85,247,.5)',
+                                borderWidth: 1,
+                                padding: 10,
+                                callbacks: { label: ctx => ` Hacim: ${ctx.parsed.y}` }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                display: true,
+                                beginAtZero: false,
+                                min: minVal,
+                                max: maxVal,
+                                grid: { color: 'rgba(255,255,255,0.05)', drawBorder: false },
+                                ticks: { color: '#64748b', font: { size: 9 }, maxTicksLimit: 5 }
+                            },
+                            x: {
+                                grid: { display: false },
+                                ticks: { color: '#94a3b8', font: { size: 10 }, maxRotation: 0 }
+                            }
+                        }
+                    }
+                });
+            };
+
+            const initPeakChart = (retries = 0) => {
+                if(peakChartInstance) { peakChartInstance.destroy(); peakChartInstance = null; }
+                const canvas = document.getElementById('peakChart');
+                if(!canvas) {
+                    if(retries < 10) setTimeout(() => initPeakChart(retries + 1), 150);
+                    return;
+                }
+                const months = analysisData.value.trend_months || ['Oca','\u015eub','Mar','Nis','May','Haz','Tem','A\u011fu','Eyl','Eki','Kas','Ara'];
+                const tData = analysisData.value.sales_data || analysisData.value.trend_data || Array(12).fill(50);
+                const peakIdxs = analysisData.value.peak_months || [];
+                const colors = months.map((_, i) => peakIdxs.includes(i) ? 'rgba(249,115,22,0.85)' : 'rgba(99,102,241,0.5)');
+                const borderColors = months.map((_, i) => peakIdxs.includes(i) ? '#f97316' : '#6366f1');
+                peakChartInstance = new Chart(canvas.getContext('2d'), {
+                    type: 'bar',
+                    data: {
+                        labels: months,
+                        datasets: [{
+                            label: 'Sat\u0131\u015f Hacmi',
+                            data: tData,
+                            backgroundColor: colors,
+                            borderColor: borderColors,
+                            borderWidth: 1.5,
+                            borderRadius: 6,
+                        }]
+                    },
+                    options: {
+                        responsive: true, maintainAspectRatio: false,
+                        animation: { duration: 900 },
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: { backgroundColor: 'rgba(15,23,42,.95)', titleColor: '#e2e8f0', bodyColor: '#94a3b8', borderColor: 'rgba(249,115,22,.4)', borderWidth: 1, callbacks: { label: ctx => ` Hacim: ${ctx.parsed.y}` } }
+                        },
+                        scales: {
+                            y: { display: false, beginAtZero: true },
+                            x: { grid: { display: false }, ticks: { color: '#64748b', font: { size: 9 }, maxRotation: 0 } }
+                        }
+                    }
+                });
+            };
+
+            const startAnalysis = async () => {
+                if(!userIdea.value) return;
+                isLoading.value = true;
+                loadingText.value = 'Ajan 1 İnternete Çıktı: Canlı Veriler Taranıyor...';
+                page.value = 'analysis';
+                
+                try {
+                    const res = await axios.post('/api/analyze', { 
+                        idea: userIdea.value,
+                        business_model: businessModel.value
+                    });
+                    analysisData.value = res.data.data;
+                    isLoading.value = false;
+                    nextTick(() => {
+                        initChart();
+                        initPeakChart();
+                    });
+                } catch (e) {
+                    alert('Bir hata oluştu: ' + e.message);
+                    reset();
+                }
+            };
+
+            const goToDesignStyle = (niche) => {
+                selectedNiche.value = niche;
+                // Route based on whether product supports design
+                if (analysisData.value && analysisData.value.design_applicable === false) {
+                    page.value = 'design-style'; // shows only tag strategy
+                    isDesignProduct.value = false;
+                } else {
+                    page.value = 'design-style';
+                    isDesignProduct.value = true;
+                }
+            };
+
+            const startProduction = async (niche) => {
+                if (niche) selectedNiche.value = niche;
+                page.value = 'production';
+                
+                productionTasks[0].status = 'running';
+                
+                axios.post('/api/generate', {
+                    niche: selectedNiche.value,
+                    design_style: selectedDesignStyle.value,
+                    tag_strategy: selectedTagStrategy.value,
+                    mockup_type: selectedMockupType.value,
+                    is_design_product: isDesignProduct.value
+                }).then(res => {
+                    resultData.value = res.data;
+                    if (res.data.mockup_url) {
+                        activeMockupUrl.value = res.data.mockup_url;
+                    }
+                    
+                    let step = isDesignProduct.value ? 0 : 3;
+                    if (!isDesignProduct.value) {
+                        productionTasks[0].status = 'done';
+                        productionTasks[1].status = 'done';
+                        productionTasks[2].status = 'done';
+                        productionTasks[3].status = 'running';
+                    }
+                    
+                    const interval = setInterval(() => {
+                        if(step < 4) {
+                            productionTasks[step].status = 'done';
+                            if(step + 1 < 4) productionTasks[step+1].status = 'running';
+                            step++;
+                        } else {
+                            clearInterval(interval);
+                            setTimeout(() => { page.value = 'result'; }, 600);
+                        }
+                    }, 1500); // 1.5s delay for dramatic effect
+                }).catch(e => {
+                    alert('Üretim hatası: ' + e.message);
+                    reset();
+                });
+            };
+
+            const downloadZip = async () => {
+                try {
+                    const res = await axios.post('/api/export', {
+                        mockup_url: activeMockupUrl.value || resultData.value.mockup_url,
+                        seo_data: resultData.value.seo_data
+                    }, { responseType: 'blob' });
+                    
+                    const url = window.URL.createObjectURL(new Blob([res.data]));
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', `${selectedNiche.value.replace(/\s+/g, '_')}_sellerflow.zip`);
+                    document.body.appendChild(link);
+                    link.click();
+                } catch(e) {
+                    alert('İndirme hatası!');
+                }
+            };
+
+            const reset = () => {
+                page.value = 'input';
+                userIdea.value = '';
+                businessModel.value = 'pod';
+                analysisData.value = null;
+                resultData.value = null;
+                activeMockupUrl.value = '';
+                isLoading.value = false;
+                productionTasks.forEach(t => t.status = 'pending');
+            };
+
+            const regenerateDesignOnly = async () => {
+                isRegenerating.value = true;
+                try {
+                    const res = await axios.post('/api/generate-design-only', {
+                        niche: selectedNiche.value,
+                        design_style: selectedDesignStyle.value,
+                        mockup_type: selectedMockupType.value
+                    });
+                    if (res.data.status === 'success') {
+                        resultData.value.design_url = res.data.design_url;
+                        resultData.value.mockup_url = res.data.mockup_url;
+                        resultData.value.mockup_urls = res.data.mockup_urls;
+                        resultData.value.prompt = res.data.prompt;
+                        
+                        if (res.data.mockup_url) {
+                            activeMockupUrl.value = res.data.mockup_url;
+                        }
+                    } else {
+                        alert('Tasarım yenileme hatası!');
+                    }
+                } catch(e) {
+                    alert('Hata oluştu: ' + e.message);
+                } finally {
+                    isRegenerating.value = false;
+                }
+            };
+
+            return {
+                page, userIdea, businessModel, isLoading, loadingText, analysisData, selectedNiche, isDesignProduct, isRegenerating,
+                startAnalysis, startProduction, goToDesignStyle, productionTasks, resultData, downloadZip, reset, regenerateDesignOnly,
+                upcomingEvent, allEvents, showDismissModal, nextEventPreview, activeMockupUrl,
+                dismissEvent, closeDismissModal, loadNextEvent, autoFillEvent,
+                selectedDesignStyle, selectedTagStrategy, selectedMockupType, designStyles, tagStrategies, mockupTypes
+            }
+        }
+    }).mount('#app')
+</script>
+
+</body>
+</html>
