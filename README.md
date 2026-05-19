@@ -12,15 +12,73 @@ SellerFlow Studio, Etsy ve Print-on-Demand satıcılarının ürün geliştirme 
 
 Kullanıcı yalnızca ürün fikrini girer. Sistem:
 
-✅ Karlı niş analizi yapar
-✅ Gerçek Etsy verilerini analiz eder
-✅ Rakip yoğunluğunu ölçer
-✅ AI destekli tasarım üretir
-✅ Profesyonel mockup hazırlar
-✅ Etsy SEO başlığı oluşturur
-✅ 13 optimize tag üretir
-✅ Satış trendlerini tahmin eder
-✅ ZIP halinde satış paketi sunar
+✅ Karlı niş analizi yapar  
+✅ Gerçek Etsy verilerini analiz eder  
+✅ Rakip yoğunluğunu ölçer  
+✅ AI destekli tasarım üretir  
+✅ Profesyonel mockup hazırlar  
+✅ Etsy SEO başlığı oluşturur  
+✅ 13 optimize tag üretir  
+✅ Satış trendlerini tahmin eder  
+✅ ZIP halinde satış paketi sunar  
+
+---
+
+# 📸 Uygulama Ekran Görüntüleri
+
+## 📊 Dashboard & Trend Analizi
+
+<table>
+<tr>
+
+<td width="50%">
+<img width="100%" alt="Dashboard" src="https://github.com/user-attachments/assets/694294f9-c00f-4d56-81b4-662688b43829" />
+</td>
+
+<td width="50%">
+<img width="100%" alt="Trend Analysis" src="https://github.com/user-attachments/assets/aa1212b4-b823-4172-8000-b19a68f4972a" />
+</td>
+
+</tr>
+</table>
+
+### Dashboard Özellikleri
+
+- Rekabet skoru
+- Pazar doygunluğu
+- Tahmini satış miktarı
+- Trend aylar
+- Sezonsal satış grafikleri
+- AI destekli niş analizi
+
+---
+
+## 🎨 AI Tasarım & Mockup Sistemi
+
+<table>
+<tr>
+
+<td width="50%">
+<img width="100%" alt="AI Design Panel" src="https://github.com/user-attachments/assets/280b9a4f-43d4-4d03-b8de-6fe8ac108cbf" />
+</td>
+
+<td width="50%">
+<img width="100%" alt="Mockup System" src="https://github.com/user-attachments/assets/9b32a378-d9a3-4009-b07b-cbf5a72d217b" />
+</td>
+
+</tr>
+</table>
+
+### Tasarım Sistemi Özellikleri
+
+- AI stil seçimi
+- Dinamik prompt engineering
+- Mockup üretimi
+- Etsy SEO optimizasyonu
+- Otomatik title üretimi
+- 13 optimize Etsy tag sistemi
+- CTR tahmini
+- ZIP export sistemi
 
 ---
 
@@ -30,12 +88,12 @@ Bu proje BTK Akademi Üretken Yapay Zeka Hackathonu kapsamında geliştirilmişt
 
 ## Konsept Uyumu
 
-* ✅ E-Ticaret Odaklı AI Uygulaması
-* ✅ Üretken Yapay Zeka Kullanımı
-* ✅ Agentic AI Yapısı
-* ✅ Gerçek Kullanıcı Problemi Çözümü
-* ✅ Web Uygulaması
-* ✅ Gemini API Entegrasyonu
+- ✅ E-Ticaret Odaklı AI Uygulaması
+- ✅ Üretken Yapay Zeka Kullanımı
+- ✅ Agentic AI Yapısı
+- ✅ Gerçek Kullanıcı Problemi Çözümü
+- ✅ Web Uygulaması
+- ✅ Gemini API Entegrasyonu
 
 ---
 
@@ -43,14 +101,14 @@ Bu proje BTK Akademi Üretken Yapay Zeka Hackathonu kapsamında geliştirilmişt
 
 Etsy satıcılarının en büyük problemleri:
 
-* Karlı ürün bulmak
-* Trend analizi yapmak
-* Düşük rekabetli niş keşfetmek
-* SEO uyumlu başlık yazmak
-* Doğru tag stratejisi oluşturmak
-* Profesyonel tasarım üretmek
-* Mockup hazırlamak
-* Rakip araştırması yapmak
+- Karlı ürün bulmak
+- Trend analizi yapmak
+- Düşük rekabetli niş keşfetmek
+- SEO uyumlu başlık yazmak
+- Doğru tag stratejisi oluşturmak
+- Profesyonel tasarım üretmek
+- Mockup hazırlamak
+- Rakip araştırması yapmak
 
 Bu işlemler saatler sürmektedir.
 
@@ -62,12 +120,12 @@ SellerFlow Studio tüm süreci dakikalara düşürür.
 
 SellerFlow Studio;
 
-* Gerçek Etsy market verisi
-* Çoklu AI agent sistemi
-* AI görsel üretimi
-* SEO optimizasyonu
-* Trend tahmini
-* Mockup otomasyonu
+- Gerçek Etsy market verisi
+- Çoklu AI agent sistemi
+- AI görsel üretimi
+- SEO optimizasyonu
+- Trend tahmini
+- Mockup otomasyonu
 
 ile Etsy satıcılarının üretim sürecini uçtan uca hızlandırır.
 
@@ -85,18 +143,18 @@ Kullanıcının ürün fikrini analiz eder.
 
 ### Üretilen Veriler
 
-* Rekabet seviyesi
-* Pazar doygunluğu
-* Trend aylar
-* Tahmini satış
-* Alt niş önerileri
-* Sezonsal analiz
+- Rekabet seviyesi
+- Pazar doygunluğu
+- Trend aylar
+- Tahmini satış
+- Alt niş önerileri
+- Sezonsal analiz
 
 ### Özellikler
 
-* Gerçek EtsyHunt verisi kullanır
-* AI destekli market yorumlama yapar
-* ABD Etsy pazarı için optimize edilmiştir
+- Gerçek EtsyHunt verisi kullanır
+- AI destekli market yorumlama yapar
+- ABD Etsy pazarı için optimize edilmiştir
 
 ---
 
@@ -106,18 +164,18 @@ Profesyonel AI görsel promptları üretir.
 
 ### Desteklenen Tasarım Stilleri
 
-* Minimalist
-* Retro Vintage
-* Cyberpunk
-* Botanik
-* Gothic
-* Kawaii
+- Minimalist
+- Retro Vintage
+- Cyberpunk
+- Botanik
+- Gothic
+- Kawaii
 
 ### Özellikler
 
-* Dinamik prompt engineering
-* Stil bazlı üretim
-* Etsy trend optimizasyonu
+- Dinamik prompt engineering
+- Stil bazlı üretim
+- Etsy trend optimizasyonu
 
 ---
 
@@ -134,9 +192,9 @@ AI destekli ürün tasarımları üretir.
 
 ### Avantajları
 
-* Yüksek uptime
-* Çoklu model desteği
-* Fail-safe mimari
+- Yüksek uptime
+- Çoklu model desteği
+- Fail-safe mimari
 
 ---
 
@@ -146,16 +204,16 @@ AI destekli ürün tasarımları üretir.
 
 ### Desteklenen Yapılar
 
-* T-Shirt
-* Sweatshirt
-* Flat-Lay
-* Model Mockup
+- T-Shirt
+- Sweatshirt
+- Flat-Lay
+- Model Mockup
 
 ### Özellikler
 
-* Akıllı konumlandırma algoritması
-* Arka plan temizleme sistemi
-* Dinamik ölçekleme
+- Akıllı konumlandırma algoritması
+- Arka plan temizleme sistemi
+- Dinamik ölçekleme
 
 ---
 
@@ -165,17 +223,17 @@ Etsy algoritmasına uygun listing üretir.
 
 ### Üretilen İçerikler
 
-* SEO başlığı
-* 13 optimize Etsy tag’i
-* Açıklama metni
-* CTR optimizasyonu
-* Trafik stratejisi
+- SEO başlığı
+- 13 optimize Etsy tag’i
+- Açıklama metni
+- CTR optimizasyonu
+- Trafik stratejisi
 
 ### SEO Stratejileri
 
-* High Traffic
-* Low Competition
-* Balanced Strategy
+- High Traffic
+- Low Competition
+- Balanced Strategy
 
 ---
 
@@ -187,11 +245,11 @@ Platform gerçek Etsy market datası kullanır.
 
 ### Analiz Edilen Veriler
 
-* Arama hacmi
-* Rekabet oranı
-* Tahmini satış
-* Trend keywordler
-* Rakip yoğunluğu
+- Arama hacmi
+- Rekabet oranı
+- Tahmini satış
+- Trend keywordler
+- Rakip yoğunluğu
 
 ---
 
@@ -207,9 +265,9 @@ Birbirinden bağımsız çalışan çoklu AI pipeline sistemi bulunmaktadır.
 
 Bu yapı yarışmanın:
 
-* “Agentic Yapılar”
-* “Teknik Puan”
-* “Yenilikçilik”
+- “Agentic Yapılar”
+- “Teknik Puan”
+- “Yenilikçilik”
 
 kriterlerine doğrudan katkı sağlar.
 
@@ -219,11 +277,11 @@ kriterlerine doğrudan katkı sağlar.
 
 Kullanıcı tek tıkla:
 
-* Mockup
-* Ürün görseli
-* SEO başlığı
-* Etsy tagleri
-* Açıklama metni
+- Mockup
+- Ürün görseli
+- SEO başlığı
+- Etsy tagleri
+- Açıklama metni
 
 çıktılarını ZIP olarak indirebilir.
 
@@ -233,30 +291,30 @@ Kullanıcı tek tıkla:
 
 ## Backend
 
-* Python
-* FastAPI
+- Python
+- FastAPI
 
 ## Frontend
 
-* React
-* TailwindCSS
+- React
+- TailwindCSS
 
 ## AI & ML
 
-* Gemini API
-* Imagen 3
-* FLUX.1
-* Together AI
-* Pollinations AI
+- Gemini API
+- Imagen 3
+- FLUX.1
+- Together AI
+- Pollinations AI
 
 ## Görsel İşleme
 
-* Pillow (PIL)
-* NumPy
+- Pillow (PIL)
+- NumPy
 
 ## Veri Analizi
 
-* EtsyHunt API
+- EtsyHunt API
 
 ---
 
@@ -278,193 +336,3 @@ Mockup Üretimi
 SEO Optimizasyonu
         ↓
 ZIP Paket Çıktısı
-```
-
----
-
-# 📊 Yarışma Kriterleri ile Eşleşme
-
-| Kriter           | Açıklama                                   |
-| ---------------- | ------------------------------------------ |
-| Kullanıcı Değeri | Etsy satıcılarının gerçek problemini çözer |
-| Teknik Puan      | Çoklu AI agent mimarisi                    |
-| Performans       | Fallback AI sistemi                        |
-| Agentic Yapılar  | 5 farklı bağımsız AI agent                 |
-| Yenilikçilik     | AI destekli Etsy otomasyonu                |
-| Kullanıcı Dostu  | Tek ekranlık üretim sistemi                |
-| Takım Çalışması  | Modüler mimari                             |
-| Sunum            | Demo destekli canlı sistem                 |
-
----
-
-# 🖥️ Uygulama Özellikleri
-
-## 📌 Dashboard
-
-* Rekabet skoru
-* Trend analizi
-* Aylık satış tahmini
-* Sezonsal grafikler
-
-## 📌 Tasarım Paneli
-
-* Stil seçimi
-* Mockup seçimi
-* SEO stratejisi
-
-## 📌 SEO Paneli
-
-* Etsy title üretimi
-* 13 optimize tag
-* CTR skoru
-
----
-
-# 🚀 Kurulum
-
-## 1️⃣ Repoyu Klonla
-
-```bash
-git clone https://github.com/USERNAME/sellerflow-studio.git
-```
-
----
-
-## 2️⃣ Backend Kurulumu
-
-```bash
-cd backend
-
-pip install -r requirements.txt
-
-uvicorn main:app --reload
-```
-
----
-
-## 3️⃣ Frontend Kurulumu
-
-```bash
-cd frontend
-
-npm install
-
-npm run dev
-```
-
----
-
-# 🔑 Environment Variables
-
-`.env`
-
-```env
-# ── AI Modelleri ──────────────────────────────
-GEMINI_API_KEY="YOUR_GEMINI_API_KEY"
-TOGETHER_API_KEY=""
-FAL_API_KEY="YOUR_FAL_API_KEY"
-
-# ── Etsy Veri Kaynakları ──────────────────────
-ETSYHUNT_API_KEY="YOUR_ETSYHUNT_API_KEY"
-```
-
-⚠️ Güvenlik nedeniyle gerçek API key’leri GitHub reposuna yüklenmemelidir.
-
----
-
-# 📂 Proje Yapısı
-
-```bash
-sellerflow-studio/
-│
-├── backend/
-│   ├── agents/
-│   ├── api/
-│   ├── services/
-│   ├── utils/
-│   └── main.py
-│
-├── frontend/
-│   ├── components/
-│   ├── pages/
-│   ├── hooks/
-│   └── app/
-│
-├── assets/
-├── mockups/
-├── outputs/
-├── README.md
-└── requirements.txt
-```
-
----
-
-# 📸 Demo Özellikleri
-
-## ✔️ Canlı Etsy Analizi
-
-Gerçek market verisi üzerinden rekabet ölçümü.
-
-## ✔️ AI Tasarım Üretimi
-
-Tek prompt ile POD tasarım üretimi.
-
-## ✔️ SEO Otomasyonu
-
-Etsy algoritmasına uygun listing üretimi.
-
-## ✔️ Mockup Pipeline
-
-Otomatik ürün mockup sistemi.
-
----
-
-# 🧩 Teknik Detaylar
-
-## Dinamik Prompt Engineering
-
-Sistem niche’e göre otomatik stil seçebilir.
-
-## Çoklu AI Fallback Sistemi
-
-Bir model başarısız olursa sistem otomatik diğer modele geçer.
-
-## Arka Plan Temizleme Algoritması
-
-Özel “black-barrier floodfill” sistemi kullanılmıştır.
-
-## Akıllı Mockup Yerleşimi
-
-Mockup türüne göre otomatik ölçekleme yapılır.
-
----
-
-# 🎥 Demo Video
-
-Yarışma teslimi kapsamında demo videosu paylaşılacaktır.
-
----
-
-# 👥 Takım
-
-BTK Akademi Üretken Yapay Zeka Hackathonu kapsamında geliştirilmiştir.
-
----
-
-# 📜 Lisans
-
-MIT License
-
----
-
-# ✨ Sonuç
-
-SellerFlow Studio;
-
-* Etsy satıcılarının üretim süresini azaltır
-* Veri odaklı satış stratejisi sunar
-* Teknik bilgi gereksinimini düşürür
-* AI destekli üretim pipeline’ı sağlar
-* E-ticaret süreçlerini ölçeklenebilir hale getirir
-
-ve üretken yapay zekayı gerçek ticari problemlere uygulayan yenilikçi bir e-ticaret platformu sunar.
